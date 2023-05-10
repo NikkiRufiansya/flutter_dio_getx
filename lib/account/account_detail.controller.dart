@@ -10,6 +10,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 class AccountDetailController extends GetxController {
   var isError = false.obs;
   var errMsg = "".obs;
+  var isLoading = true.obs;
   Rx<DetailData> detailData = DetailData().obs;
 
   Dio dio = Dio();
@@ -17,7 +18,7 @@ class AccountDetailController extends GetxController {
   @override
   void onInit() {
     // TODO: implement onInit
-   
+
     super.onInit();
   }
 
@@ -33,13 +34,15 @@ class AccountDetailController extends GetxController {
     super.onReady();
   }
 
-  Future getDetailUser(int id) async {
+  Future getDetailUser(String id) async {
+    isLoading(true);
     try {
-      
-      final result = await ApiClient().getDetailUser(ApiConst.detailUser+id.toString());
-      var  data = result["data"];
+      final result = await ApiClient().getDetailUser(ApiConst.detailUser + id);
+      var data = result["data"];
+      print("dataaaa : " + data.toString());
       isError(false);
       detailData.value = DetailData.fromJson(data);
+      isLoading(false);
       return detailData;
     } catch (e) {
       isError(true);
